@@ -1,6 +1,7 @@
 namespace SpriteKind {
-    export const CelsiusToFahrenheit = SpriteKind.create()
-    export const FahrenheitToCelsius = SpriteKind.create()
+    export const Object = SpriteKind.create()
+    export const Tick = SpriteKind.create()
+    export const InteractiveObject = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -78,26 +79,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     true
     )
 })
-function menu () {
-    celsius_fahrenheit_number = game.askForNumber("Escriu el numero de graus " + celsius_fahrenheit_name, 5)
-    if (correcto) {
-        from_fahrenheit_to_celsius(celsius_fahrenheit_number)
-        game.showLongText("" + celsius_fahrenheit_number + " graus " + celsius_fahrenheit_name + " equivalen a " + ("" + operation_result + " graus Celsius"), DialogLayout.Top)
-    } else {
-        from_celsius_to_fahrenheit(celsius_fahrenheit_number)
-        game.showLongText("" + celsius_fahrenheit_number + " graus " + celsius_fahrenheit_name + " equivalen a " + ("" + operation_result + " graus Fahrenheit"), DialogLayout.Top)
-    }
-}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (correcto == true) {
-        celsius_fahrenheit_name = "Fahrenheit"
-        game.showLongText("Has escollit fer una conversió de Fahrenheit a Celsius", DialogLayout.Top)
-        menu()
-    } else if (incorrecto == true) {
-        celsius_fahrenheit_name = "Celsius"
-        game.showLongText("Has escollit fer una conversió de Celsius a Fahrenheit", DialogLayout.Top)
-        menu()
-    }
+	
 })
 controller.down.onEvent(ControllerButtonEvent.Released, function () {
     animation.stopAnimation(animation.AnimationTypes.All, mySprite)
@@ -125,10 +108,6 @@ controller.down.onEvent(ControllerButtonEvent.Released, function () {
     false
     )
 })
-function from_fahrenheit_to_celsius (num: number) {
-    operation_result = (num - 32) * 5 / 9
-    return Math.trunc(operation_result * 100) / 100
-}
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     mySprite,
@@ -282,14 +261,6 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     true
     )
 })
-function from_celsius_to_fahrenheit (num2: number) {
-    operation_result = num2 * 9 / 5 + 32
-    return Math.trunc(operation_result * 100) / 100
-}
-sprites.onOverlap(SpriteKind.Player, SpriteKind.FahrenheitToCelsius, function (sprite, otherSprite) {
-    correcto = true
-    incorrecto = false
-})
 controller.up.onEvent(ControllerButtonEvent.Released, function () {
     animation.stopAnimation(animation.AnimationTypes.All, mySprite)
     animation.runImageAnimation(
@@ -392,54 +363,76 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     true
     )
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.CelsiusToFahrenheit, function (sprite2, otherSprite2) {
-    incorrecto = true
-    correcto = false
+sprites.onOverlap(SpriteKind.Player, SpriteKind.InteractiveObject, function (sprite2, otherSprite2) {
+	
 })
-let incorrecto = false
-let operation_result = 0
-let correcto = false
-let celsius_fahrenheit_name = ""
-let celsius_fahrenheit_number = 0
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Tick, function (sprite, otherSprite) {
+	
+})
 let mySprite: Sprite = null
-let A = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . 2 2 . . . . . . 2 . . . . 
-    . . . . 2 . . . . . 2 2 . . . . 
-    . . . . 2 2 . . . 2 2 . . . . . 
-    . . . . . 2 2 . 2 2 . . . . . . 
-    . . . . . . 2 . 2 . . . . . . . 
-    . . . . . . . 2 . . . . . . . . 
-    . . . . . . 2 2 2 . . . . . . . 
-    . . . . . 2 . . 2 2 . . . . . . 
-    . . . . 2 . . . . 2 . . . . . . 
-    . . . 2 2 . . . . 2 2 . . . . . 
-    . . . 2 . . . . . . 2 2 . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    `, SpriteKind.CelsiusToFahrenheit)
-let B = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . 7 . . . 
-    . . . . . . . . . . . 7 7 . . . 
-    . . . . . . . . . . . 7 . . . . 
-    . . . . . . . . . . 7 . . . . . 
-    . . . 7 . . . . . 7 . . . . . . 
-    . . . 7 7 . . . 7 7 . . . . . . 
-    . . . . 7 . . 7 7 . . . . . . . 
-    . . . . 7 7 . 7 . . . . . . . . 
-    . . . . . 7 7 7 . . . . . . . . 
-    . . . . . 7 7 . . . . . . . . . 
-    . . . . . 7 7 . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    `, SpriteKind.FahrenheitToCelsius)
-A.setPosition(30, 62)
-B.setPosition(132, 62)
+let enemy_ghost = sprites.create(img`
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111bf.......
+    ......fffcdb1bdffff.....
+    ....fc111cbfbfc111cf....
+    ....f1b1b1ffff1b1b1f....
+    ....fbfbffffffbfbfbf....
+    .........ffffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
+    `, SpriteKind.Enemy)
+let taco = sprites.create(img`
+    ..............eeeeeee...........
+    ............ee455662e2e.........
+    ..........ee45556723e2688.......
+    .........e46776677232e777668....
+    ........e46745554772227776778...
+    .......4448744444777766777678...
+    ......4522e7777776777766676668..
+    .....4523227766722e666eeeee888..
+    ....455232e76672322e4555dddd48..
+    ...44567777554623e455ddddddddd4.
+    ...e66774554477e455dddd55554dd44
+    ..e46777444677e55dd55555d55dddd4
+    ..e5668677666e5dd555555555555dde
+    .e45544e8776e5d555554555555555de
+    .e554eeee66e5d5555d55555dddd54de
+    .e55ee44fee5d5d555555d5d5dddddde
+    e454eeeefe45d55555555555dd4ddde.
+    e5e4eefffe5d55555555d5555dddde..
+    e5ee4eeff45d555555555555dddde...
+    e5eeeeffe5d55d555d5555d5ddde....
+    e5ffefeee5d55545555555ddd4e.....
+    e5ffffffe545555555d5d4ddee......
+    e54efeff45d55d55555dddde........
+    e5eeeffe5dd5555545dddee.........
+    e4eeefff5d5555d55ddde...........
+    e4efefff5d5d55555d4e............
+    .e4efffe5d555555dee.............
+    .e54eeee5d545dd4e...............
+    ..e554ee5dddddee................
+    ...ee5544dddee..................
+    .....eeeeeee....................
+    ................................
+    `, SpriteKind.InteractiveObject)
+enemy_ghost.setPosition(30, 62)
+taco.setPosition(132, 62)
+tiles.setCurrentTilemap(tilemap`level3`)
 mySprite = sprites.create(img`
     . . . . . . f f f f . . . . . . 
     . . . . f f f 2 2 f f f . . . . 
@@ -458,6 +451,5 @@ mySprite = sprites.create(img`
     . . . . . f f f f f f . . . . . 
     . . . . . f f . . f f . . . . . 
     `, SpriteKind.Player)
-tiles.setCurrentTilemap(tilemap`level1`)
 controller.moveSprite(mySprite)
-game.showLongText("\"Decide: bien o mal\"", DialogLayout.Top)
+game.showLongText("Hola", DialogLayout.Top)

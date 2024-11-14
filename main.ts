@@ -451,5 +451,7 @@ mySprite = sprites.create(img`
     . . . . . f f f f f f . . . . . 
     . . . . . f f . . f f . . . . . 
     `, SpriteKind.Player)
+mySprite.setStayInScreen(true)
+scene.cameraFollowSprite(mySprite)
 controller.moveSprite(mySprite)
 game.showLongText("Hola", DialogLayout.Top)
